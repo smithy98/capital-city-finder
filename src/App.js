@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
 
-function App() {
+import "./App.css";
+import { fetchCapital } from "./api/fetchCapital";
+
+const App = () => {
+  const [query, setQuery] = useState("");
+  const [country, setCountry] = useState("");
+  const [capital, setCapital] = useState("");
+  const [flag, setFlag] = useState("");
+
+  const search = async (e) => {
+    if (e.key === "Enter") {
+      const data = await fetchCapital(query);
+
+      console.log(data[0]);
+
+      setCountry(data[0].name);
+      setCapital(data[0].capital);
+      setFlag(data[0].flag);
+      setQuery("");
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="main-container">
+      <input
+        className="search"
+        type="text"
+        placeholder="Enter country name..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onKeyPress={search}
+      />
+      {capital && (
+        <div className="capital">
+          <div className="country-name">{country}</div>
+          <img className="flag-img" src={flag} alt="Flag" />
+          <div className="capital-name">{capital}</div>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
